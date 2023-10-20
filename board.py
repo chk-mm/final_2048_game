@@ -15,10 +15,12 @@ class Board():
         self.turtle.goto(STARTING_X, STARTING_Y)
         self.screen = screen
         self.tiles = [
+            [0, 2, 0, 2],
             [0, 2, 0, 0],
             [2, 2, 0, 0],
-            [2, 2, 2, 2],
-            [2, 2, 2, 2]
+            # [2, 2, 2, 3],
+            [2, 2, 2, 0]
+            # [1, 2, 3, 4]
         ]
         self.void_pos = (3, 3)
         self.draw_tiles()
@@ -33,7 +35,6 @@ class Board():
             self.turtle.goto(STARTING_X, self.turtle.ycor() - SPACE)
 
     def go_up(self):
-        # move eveything to the top
         for column in range(0,4):
             zero_pos = 0
             for row in range(0,4):
@@ -44,11 +45,8 @@ class Board():
                     old_val = self.tiles[row-zero_pos][column]
                     self.tiles[row-zero_pos][column] = new_val
                     self.tiles[row][column] = old_val
-            print(self.tiles[column])
         for column in range (0,4):
-            row_start = 0
-            check_position = [0,2]
-            for position in range(0,4):
+            for position in range(0,3):
                 if self.tiles[position][column] > 0:
                     if self.tiles[position][column] == self.tiles[position+1][column]:
                         sumval = self.tiles[position][column] + self.tiles[position+1][column]
@@ -64,17 +62,29 @@ class Board():
                     old_val = self.tiles[row-zero_pos][column]
                     self.tiles[row-zero_pos][column] = new_val
                     self.tiles[row][column] = old_val
-            print(self.tiles[column])
         self.draw_tiles()
 
 
 
     def go_down(self):
-        up_to_void_pos = (self.void_pos[0] + 1, self.void_pos[1])
-        self.swap_with_void(up_to_void_pos)
+        # for column in range(0, 4):
+        #     reverselist = self.tiles[column]
+        #     reverselist = reverselist[::-1]
+        #     zero_pos = 0
+        #     for y in range(0, 4):
+        #         if reverselist[y] == 0:
+        #             zero_pos += 1
+        #         else:
+        #             new_val = reverselist[y]
+        #             old_val = reverselist[y - zero_pos]
+        #             reverselist[y - zero_pos] = new_val
+        #             reverselist[y] = old_val
+        #     reverselist = reverselist[::-1]
+        #     self.tiles[column] = reverselist
+        #     print(self.tiles[column])
+        self.draw_tiles()
 
     def go_left(self):
-        # move eveything to the left most
         for x in range(0,4):
             zero_pos = 0
             for y in range(0,4):
@@ -85,8 +95,6 @@ class Board():
                     old_val = self.tiles[x][y - zero_pos]
                     self.tiles[x][y-zero_pos] = new_val
                     self.tiles[x][y] = old_val
-            print(self.tiles[x])
-        print('<<end move>>')
         for x in range(0,4):
             for y in range(0,4):
                 if self.tiles[x][y] > 0:
@@ -94,7 +102,6 @@ class Board():
                         sum_val = self.tiles[x][y] + self.tiles[x][y+1]
                         self.tiles[x][y] = sum_val
                         self.tiles[x][y+1] = 0
-        print('<<end sum>>')
         for x in range(0,4):
             zero_pos = 0
             for y in range(0,4):
@@ -105,26 +112,38 @@ class Board():
                     old_val = self.tiles[x][y - zero_pos]
                     self.tiles[x][y-zero_pos] = new_val
                     self.tiles[x][y] = old_val
-            print(self.tiles[x])
-        print('<<end move2>>')
         self.draw_tiles()
 
     def go_right(self):
-        # move eveything to the left most
         for x in range(0, 4):
+            reverselist = self.tiles[x]
+            reverselist = reverselist[::-1]
             zero_pos = 0
-            reverse_val = 3
-            while(reverse_val>-1):
-                if self.tiles[x][reverse_val] == 0:
-                    zero_pos -= 1
+            for y in range(0, 4):
+                if reverselist[y] == 0:
+                    zero_pos += 1
                 else:
-                    new_val = self.tiles[x][reverse_val]
-                    old_val = self.tiles[x][reverse_val + zero_pos]
-                    self.tiles[x][reverse_val + zero_pos] = new_val
-                    self.tiles[x][reverse_val] = old_val
-                reverse_val -= 1
-            print(self.tiles[x])
-        print('<<end move>>')
+                    new_val = reverselist[y]
+                    old_val = reverselist[y - zero_pos]
+                    reverselist[y - zero_pos] = new_val
+                    reverselist[y] = old_val
+            for y in range(0, 4):
+                if reverselist[y] > 0:
+                    if reverselist[y] == reverselist[y + 1]:
+                        sum_val = reverselist[y] + reverselist[y + 1]
+                        reverselist[y] = sum_val
+                        reverselist[y + 1] = 0
+            for y in range(0, 4):
+                if reverselist[y] == 0:
+                    zero_pos += 1
+                else:
+                    new_val = reverselist[y]
+                    old_val = reverselist[y - zero_pos]
+                    reverselist[y - zero_pos] = new_val
+                    reverselist[y] = old_val
+            reverselist = reverselist[::-1]
+            self.tiles[x] = reverselist
+        self.draw_tiles()
 
     def swap_with_void(self, up_to_void_pos):
         x1, y1 = up_to_void_pos
