@@ -87,16 +87,6 @@ class Board():
                     self.tiles[x][y] = old_val
             print(self.tiles[x])
         print('<<end move>>')
-        # for x in range(0,4):
-        #     y_start = 0
-        #     for y in range(1,3):
-        #         if self.tiles[x][y_start] > 0 and self.tiles[x][y]==self.tiles[x][y_start]:
-        #             sum_val = self.tiles[x][y_start]+self.tiles[x][y]
-        #             self.tiles[x][y_start] = sum_val
-        #             self.tiles[x][y] = 0
-        #         elif self.tiles[x][y] != 0 and self.tiles[x][y]==self.tiles[x][y+1]:
-        #             self.tiles[x][y] = sum_val
-        #             self.tiles[x][y+1] = 0
         for x in range(0,4):
             for y in range(0,4):
                 if self.tiles[x][y] > 0:
@@ -104,15 +94,6 @@ class Board():
                         sum_val = self.tiles[x][y] + self.tiles[x][y+1]
                         self.tiles[x][y] = sum_val
                         self.tiles[x][y+1] = 0
-        # for row in range (0,4):
-        #     row_start = 0
-        #     check_position = [0,2]
-        #     for position in check_position:
-        #         if self.tiles[row][position] > 0:
-        #             if self.tiles[row][position] == self.tiles[row][position+1]:
-        #                 sumval = self.tiles[row][position] + self.tiles[row][position+1]
-        #                 self.tiles[row][position] = sumval
-        #                 self.tiles[row][position+1] = 0
         print('<<end sum>>')
         for x in range(0,4):
             zero_pos = 0
