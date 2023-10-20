@@ -15,11 +15,11 @@ class Board():
         self.turtle.goto(STARTING_X, STARTING_Y)
         self.screen = screen
         self.tiles = [
-            [0, 2, 0, 2],
-            [0, 2, 0, 0],
+            [2, 2, 0, 1],
+            [2, 2, 0, 0],
             [2, 2, 0, 0],
             # [2, 2, 2, 3],
-            [2, 2, 2, 0]
+            [2, 2, 2, 4]
             # [1, 2, 3, 4]
         ]
         self.void_pos = (3, 3)
@@ -67,21 +67,38 @@ class Board():
 
 
     def go_down(self):
-        # for column in range(0, 4):
-        #     reverselist = self.tiles[column]
-        #     reverselist = reverselist[::-1]
-        #     zero_pos = 0
-        #     for y in range(0, 4):
-        #         if reverselist[y] == 0:
-        #             zero_pos += 1
-        #         else:
-        #             new_val = reverselist[y]
-        #             old_val = reverselist[y - zero_pos]
-        #             reverselist[y - zero_pos] = new_val
-        #             reverselist[y] = old_val
-        #     reverselist = reverselist[::-1]
-        #     self.tiles[column] = reverselist
-        #     print(self.tiles[column])
+        for column in range(0, 4):
+            zero_pos = 0
+            row = 3
+            while row > -1:
+                if self.tiles[row][column] == 0:
+                    zero_pos += 1
+                else:
+                    new_val = self.tiles[row][column]
+                    old_val = self.tiles[row + zero_pos][column]
+                    self.tiles[row + zero_pos][column] = new_val
+                    self.tiles[row][column] = old_val
+                row -= 1
+            row = 3
+            while row > 0:
+                if self.tiles[row][column] > 0:
+                    if self.tiles[row][column] == self.tiles[row-1][column]:
+                        sumval = self.tiles[row][column] + self.tiles[row-1][column]
+                        self.tiles[row][column] = sumval
+                        self.tiles[row - 1][column] = 0
+                row -= 1
+            zero_pos = 0
+            row = 3
+            while row > -1:
+                if self.tiles[row][column] == 0:
+                    zero_pos += 1
+                else:
+                    new_val = self.tiles[row][column]
+                    old_val = self.tiles[row + zero_pos][column]
+                    self.tiles[row + zero_pos][column] = new_val
+                    self.tiles[row][column] = old_val
+                row -= 1
+            row = 3
         self.draw_tiles()
 
     def go_left(self):
@@ -96,7 +113,7 @@ class Board():
                     self.tiles[x][y-zero_pos] = new_val
                     self.tiles[x][y] = old_val
         for x in range(0,4):
-            for y in range(0,4):
+            for y in range(0,3):
                 if self.tiles[x][y] > 0:
                     if self.tiles[x][y] == self.tiles[x][y+1]:
                         sum_val = self.tiles[x][y] + self.tiles[x][y+1]
