@@ -18,13 +18,7 @@ class Board():
             [0, 0, 0, 0],
             [2, 0, 0, 0],
             [2, 2, 2, 2],
-            [0, 0, 0, 0]
-        ]
-        self.completed_tiles = [
-            [1, 2, 3, 4],
-            [5, 6, 7, 8],
-            [9, 10, 11, 12],
-            [13, 14, 15, None]
+            [2, 0, 2, 2]
         ]
         self.void_pos = (3, 3)
         self.draw_tiles()
@@ -39,8 +33,39 @@ class Board():
             self.turtle.goto(STARTING_X, self.turtle.ycor() - SPACE)
 
     def go_up(self):
-        up_to_void_pos = (self.void_pos[0] - 1, self.void_pos[1])
-        self.swap_with_void(up_to_void_pos)
+        # move eveything to the top
+        for column in range(0,4):
+            zero_pos = 0
+            for row in range(0,4):
+                if self.tiles[row][column]==0:
+                    zero_pos += 1
+                else:
+                    new_val = self.tiles[row][column]
+                    old_val = self.tiles[row-zero_pos][column]
+                    self.tiles[row-zero_pos][column] = new_val
+                    self.tiles[row][column] = old_val
+            print(self.tiles[column])
+        print('<<end move up>>')
+        for column in range(0,4):
+            row_start = 0
+            for row in range(1,4):
+                if self.tiles[row_start][column] > 0 and self.tiles[row][column]==self.tiles[row_start][column]:
+                    sum_val = self.tiles[row][column]+self.tiles[row_start][column]
+                    self.tiles[row_start] = sum_val
+                    self.tiles[row][column] = 0
+        for column in range(0,4):
+            zero_pos = 0
+            for row in range(0,4):
+                if self.tiles[row][column]==0:
+                    zero_pos += 1
+                else:
+                    new_val = self.tiles[row][column]
+                    old_val = self.tiles[row-zero_pos][column]
+                    self.tiles[row-zero_pos][column] = new_val
+                    self.tiles[row][column] = old_val
+            print(self.tiles[column])
+
+
 
     def go_down(self):
         up_to_void_pos = (self.void_pos[0] + 1, self.void_pos[1])
@@ -84,8 +109,6 @@ class Board():
             print(self.tiles[x])
         print('<<end move2>>')
 
-        up_to_void_pos = (self.void_pos[0], self.void_pos[1] - 1)
-        self.swap_with_void(up_to_void_pos)
 
     def go_right(self):
         up_to_void_pos = (self.void_pos[0], self.void_pos[1] + 1)
