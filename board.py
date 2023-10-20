@@ -15,6 +15,7 @@ class Board():
         self.turtle.hideturtle()
         self.turtle.goto(STARTING_X, STARTING_Y)
         self.screen = screen
+        self.screen.title("2048 Game")
         self.tiles = [
             [2, 0, 2, 0],
             [0, 0, 0, 0],
