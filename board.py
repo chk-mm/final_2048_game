@@ -64,6 +64,7 @@ class Board():
                     self.tiles[row-zero_pos][column] = new_val
                     self.tiles[row][column] = old_val
             print(self.tiles[column])
+        self.draw_tiles()
 
 
 
@@ -108,7 +109,7 @@ class Board():
                     self.tiles[x][y] = old_val
             print(self.tiles[x])
         print('<<end move2>>')
-
+        self.draw_tiles()
 
     def go_right(self):
         up_to_void_pos = (self.void_pos[0], self.void_pos[1] + 1)
