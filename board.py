@@ -4,6 +4,7 @@ FONT = ('verdana', 30, 'normal')
 STARTING_X = -120
 STARTING_Y = 100
 SPACE = 80
+IS_MOVE_COLUMN = True
 
 
 class Board():
@@ -15,12 +16,10 @@ class Board():
         self.turtle.goto(STARTING_X, STARTING_Y)
         self.screen = screen
         self.tiles = [
-            [2, 2, 0, 1],
-            [2, 2, 0, 0],
-            [2, 2, 0, 0],
-            # [2, 2, 2, 3],
-            [2, 2, 2, 4]
-            # [1, 2, 3, 4]
+            [2, 0, 2, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
         ]
         self.void_pos = (3, 3)
         self.draw_tiles()
@@ -34,7 +33,19 @@ class Board():
                 self.turtle.goto(self.turtle.xcor() + SPACE, self.turtle.ycor())
             self.turtle.goto(STARTING_X, self.turtle.ycor() - SPACE)
 
+    def compare_is_move(self):
+        tmp_compare = []
+        for i in range(0,4):
+            tmp1 = []
+            for j in range(0,4):
+                tmp1.append(self.tiles[i][j])
+            tmp_compare.append(tmp1)
+        return tmp_compare
+
+
     def go_up(self):
+        IS_MOVE = True
+        tmp_compare = self.compare_is_move()
         for column in range(0,4):
             zero_pos = 0
             for row in range(0,4):
@@ -52,6 +63,8 @@ class Board():
                         sumval = self.tiles[position][column] + self.tiles[position+1][column]
                         self.tiles[position][column] = sumval
                         self.tiles[position + 1][column] = 0
+                        IS_MOVE = False
+                        self.random_spawn()
         for column in range(0,4):
             zero_pos = 0
             for row in range(0,4):
@@ -62,11 +75,15 @@ class Board():
                     old_val = self.tiles[row-zero_pos][column]
                     self.tiles[row-zero_pos][column] = new_val
                     self.tiles[row][column] = old_val
+        if tmp_compare != self.tiles and IS_MOVE:
+            self.random_spawn()
         self.draw_tiles()
 
 
 
     def go_down(self):
+        IS_MOVE = True
+        tmp_compare = self.compare_is_move()
         for column in range(0, 4):
             zero_pos = 0
             row = 3
@@ -86,6 +103,8 @@ class Board():
                         sumval = self.tiles[row][column] + self.tiles[row-1][column]
                         self.tiles[row][column] = sumval
                         self.tiles[row - 1][column] = 0
+                        self.random_spawn()
+                        IS_MOVE = False
                 row -= 1
             zero_pos = 0
             row = 3
@@ -99,9 +118,13 @@ class Board():
                     self.tiles[row][column] = old_val
                 row -= 1
             row = 3
+        if tmp_compare != self.tiles and IS_MOVE:
+            self.random_spawn()
         self.draw_tiles()
 
     def go_left(self):
+        IS_MOVE = True
+        tmp_compare = self.compare_is_move()
         for x in range(0,4):
             zero_pos = 0
             for y in range(0,4):
@@ -119,6 +142,8 @@ class Board():
                         sum_val = self.tiles[x][y] + self.tiles[x][y+1]
                         self.tiles[x][y] = sum_val
                         self.tiles[x][y+1] = 0
+                        self.random_spawn()
+                        IS_MOVE = False
         for x in range(0,4):
             zero_pos = 0
             for y in range(0,4):
@@ -129,9 +154,13 @@ class Board():
                     old_val = self.tiles[x][y - zero_pos]
                     self.tiles[x][y-zero_pos] = new_val
                     self.tiles[x][y] = old_val
+        if tmp_compare != self.tiles and IS_MOVE:
+            self.random_spawn()
         self.draw_tiles()
 
     def go_right(self):
+        IS_MOVE = True
+        tmp_compare = self.compare_is_move()
         for x in range(0, 4):
             reverselist = self.tiles[x]
             reverselist = reverselist[::-1]
@@ -144,12 +173,14 @@ class Board():
                     old_val = reverselist[y - zero_pos]
                     reverselist[y - zero_pos] = new_val
                     reverselist[y] = old_val
-            for y in range(0, 4):
+            for y in range(0, 3):
                 if reverselist[y] > 0:
                     if reverselist[y] == reverselist[y + 1]:
                         sum_val = reverselist[y] + reverselist[y + 1]
                         reverselist[y] = sum_val
                         reverselist[y + 1] = 0
+                        self.random_spawn()
+                        IS_MOVE = False
             for y in range(0, 4):
                 if reverselist[y] == 0:
                     zero_pos += 1
@@ -160,12 +191,15 @@ class Board():
                     reverselist[y] = old_val
             reverselist = reverselist[::-1]
             self.tiles[x] = reverselist
+        if tmp_compare != self.tiles and IS_MOVE:
+            self.random_spawn()
         self.draw_tiles()
 
-    def swap_with_void(self, up_to_void_pos):
-        x1, y1 = up_to_void_pos
-        x2, y2 = self.void_pos
-        self.tiles[x2][y2], self.tiles[x1][y1] = self.tiles[x1][y1], self.tiles[x2][y2]
-        self.draw_tiles()
-        self.void_pos = up_to_void_pos
-        self.screen.update()
+    def random_spawn(self):
+        random = Random()
+        while True:
+            c = random.randint(0,3)
+            r = random.randint(0,3)
+            if self.tiles[r][c] == 0:
+                self.tiles[r][c] = 2
+                break
